@@ -1,5 +1,6 @@
 .components-docs
 dist
 dist-cdn
+dist-cdn-all/custom-config-*
 node_modules
 storybook-static

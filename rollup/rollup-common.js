@@ -96,14 +96,14 @@ export function clearPlugin ({ outputDir }) {
   });
 }
 
-export function importMetaUrlAssetsPlugin () {
+export function importMetaUrlAssetsPlugin ({ optimize = true } = {}) {
   return importMetaAssets({
     // Let's assume we don't have import.meta.url assets in our deps to speed up things
     exclude: 'node_modules/**',
     transform: (svgBuffer, id) => {
-      return svgo
-        .optimize(svgBuffer.toString())
-        .then(({ data }) => data);
+      return optimize
+        ? svgo.optimize(svgBuffer.toString()).then(({ data }) => data)
+        : svgBuffer;
     },
   });
 }
