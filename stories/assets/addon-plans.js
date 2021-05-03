@@ -6896,7 +6896,7 @@ export function getFullProductAddon (addonProviderId, addonFeatures) {
   return formatAddonProduct(rawAddonProvider, rawPriceSystem, addonFeatures, CURRENCY_EUR);
 }
 
-export function getProductAddon (addonProviderId, addonFeatures) {
-  const { items, features } = getFullProductAddon(addonProviderId, addonFeatures);
+export function getProductAddon (addonProviderId) {
+  const { items, features } = getFullProductAddon(addonProviderId);
   return { items, features };
 }
