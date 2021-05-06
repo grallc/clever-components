@@ -73,7 +73,7 @@ export function formatPercent (lang, value) {
 // https://en.wikipedia.org/wiki/Metric_prefix
 const SI_PREFIXES = ['', 'k', 'M', 'G', 'T', 'P'];
 
-export function prepareNumberUnitFormatter (lang) {
+export function prepareNumberUnitFormatter (lang, symbol = '', separator = '') {
   const nf = new Intl.NumberFormat(lang, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   return (rawValue) => {
     // Figure out the "magnitude" of the rawValue: 1000 => 1 / 1000000 => 2 / 1000000000 => 3 ...
@@ -85,8 +85,7 @@ export function prepareNumberUnitFormatter (lang) {
     // Use Intl/i18n aware number formatter
     const formattedValue = nf.format(rebasedValue);
     const prefix = SI_PREFIXES[prefixIndex];
-    // No space for compact display
-    return formattedValue + prefix;
+    return formattedValue + separator + prefix + symbol;
   };
 }
 

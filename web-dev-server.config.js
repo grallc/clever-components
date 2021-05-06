@@ -62,6 +62,8 @@ export default {
         // used by chart.js
         'moment',
         'statuses',
+        'component-emitter',
+        'oauth-1.0a',
       ]),
     }),
   ],

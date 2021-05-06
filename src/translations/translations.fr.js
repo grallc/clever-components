@@ -44,6 +44,7 @@ const formatDistanceToNow = prepareFormatDistanceToNow(lang, (value, unit) => {
 
 const formatNumberUnit = prepareNumberUnitFormatter(lang);
 const formatBytes = prepareNumberBytesFormatter(lang, 'o', '\u202f');
+const formatBytesSi = prepareNumberUnitFormatter(lang, 'o', '\u202f');
 
 // Shared logic between translations, is it a good idea?
 function formatFlavor (f) {
@@ -443,4 +444,23 @@ export const translations = {
   },
   // cc-pricing-product
   'cc-pricing-product.error': 'Une erreur est survenue pendant le chargement des prix.',
+  // cc-pricing-estimation
+  'cc-pricing-estimation.product': `Produit`,
+  'cc-pricing-estimation.size': `Taille`,
+  'cc-pricing-estimation.quantity': `Quantité`,
+  'cc-pricing-estimation.price-name-daily': `Prix (jour)`,
+  'cc-pricing-estimation.price-name-monthly': () => sanitize`Prix (30&nbsp;jours)`,
+  'cc-pricing-estimation.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
+  'cc-pricing-estimation.monthly-est': `Coût Mensuel Estimé`,
+  'cc-pricing-estimation.sales': `Nous contacter`,
+  'cc-pricing-estimation.sign-up': `S'inscrire`,
+  // cc-pricing-header
+  'cc-pricing-header.currency-text': 'Monnaie',
+  'cc-pricing-header.est-cost': 'Coût Estimé',
+  'cc-pricing-header.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
+  // cc-pricing-cellar
+  // TODO vv
+  'cc-pricing-cellar.bytes': ({ bytes }) => formatBytesSi(bytes),
+  'cc-pricing-cellar.per-month-text': `Go par mois`,
+  'cc-pricing-cellar.format-price': ({ price }) => `${formatCurrency(lang, price, { maximumFractionDigits: 5 })}`,
 };

@@ -31,6 +31,7 @@ const formatDistanceToNow = prepareFormatDistanceToNow(lang, (value, unit) => {
 
 const formatNumberUnit = prepareNumberUnitFormatter(lang);
 const formatBytes = prepareNumberBytesFormatter(lang, 'B', ' ');
+const formatBytesSi = prepareNumberUnitFormatter(lang, 'B', ' ');
 
 // Shared logic between translations, is it a good idea?
 function formatFlavor (f) {
@@ -430,4 +431,23 @@ export const translations = {
   },
   // cc-pricing-product
   'cc-pricing-product.error': 'An error occured while loading pricing details.',
+  // cc-pricing-estimation
+  'cc-pricing-estimation.product': `Product`,
+  'cc-pricing-estimation.size': `Size`,
+  'cc-pricing-estimation.quantity': `Quantity`,
+  'cc-pricing-estimation.price-name-daily': `Price (daily)`,
+  'cc-pricing-estimation.price-name-monthly': () => sanitize`Price (30&nbsp;days)`,
+  'cc-pricing-estimation.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
+  'cc-pricing-estimation.monthly-est': `Est. Monthly Cost`,
+  'cc-pricing-estimation.sales': `Contact Sales`,
+  'cc-pricing-estimation.sign-up': `Sign Up`,
+  // cc-pricing-header
+  'cc-pricing-header.currency-text': 'Currency',
+  'cc-pricing-header.est-cost': 'Estimated Cost',
+  'cc-pricing-header.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
+  // cc-pricing-cellar
+  // TODO vv
+  'cc-pricing-cellar.bytes': ({ bytes }) => formatBytesSi(bytes),
+  'cc-pricing-cellar.per-month-text': `GB per month`,
+  'cc-pricing-cellar.format-price': ({ price }) => `${formatCurrency(lang, price, { maximumFractionDigits: 5 })}`,
 };
