@@ -92,6 +92,18 @@ export const dataLoadedWithPulsar = makeStory(conf, {
   }],
 });
 
+export const dataLoadedWithJenkins = makeStory(conf, {
+  items: [{
+    type: 'jenkins',
+    name: 'Jenkins',
+    toggleState: 'open',
+    icon: 'https://static-assets.cellar.services.clever-cloud.com/logos/jenkins.svg',
+    credentials: [
+      { type: 'url', value: 'https://url', secret: false },
+    ],
+  }],
+});
+
 export const simulations = makeStory(conf, {
   items: [
     {
@@ -126,5 +138,6 @@ enhanceStoriesNames({
   dataLoadedWithKibana,
   dataLoadedWithApm,
   dataLoadedWithPulsar,
+  dataLoadedWithJenkins,
   simulations,
 });

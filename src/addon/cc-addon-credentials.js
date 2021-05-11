@@ -33,7 +33,7 @@ import { skeletonStyles } from '../styles/skeleton.js';
  * @prop {String} icon - Sets the URL of the icon to use.
  * @prop {String} name - Sets the display name of the add-on.
  * @prop {"off"|"open"|"close"} toggleState - Sets the toggle state of the inner block.
- * @prop {"apm"|"elasticsearch"|"kibana"|"pulsar"} type - Sets the type of the add-on.
+ * @prop {"apm"|"elasticsearch"|"jenkins"|"kibana"|"pulsar"} type - Sets the type of the add-on.
  */
 
 export class CcAddonCredentials extends LitElement {
@@ -61,6 +61,8 @@ export class CcAddonCredentials extends LitElement {
         return i18n('cc-addon-credentials.description.apm');
       case 'elasticsearch':
         return i18n('cc-addon-credentials.description.elasticsearch');
+      case 'jenkins':
+        return i18n('cc-addon-credentials.description.jenkins');
       case 'kibana':
         return i18n('cc-addon-credentials.description.kibana');
       case 'pulsar':

@@ -72,6 +72,7 @@ export const translations = {
   // cc-addon-credentials
   'cc-addon-credentials.description.apm': `Use those credentials to connect an APM Server instance to your Elasticsearch cluster.`,
   'cc-addon-credentials.description.elasticsearch': `Use those credentials to connect to your Elasticsearch cluster.`,
+  'cc-addon-credentials.description.jenkins': `Use the URL below to open the Jenkins interface. The credentials are the same as your Clever Cloud account.`,
   'cc-addon-credentials.description.kibana': `Use those credentials to connect a Kibana instance to your Elasticsearch cluster.`,
   'cc-addon-credentials.description.pulsar': `Use those information to connect your Pulsar add-on.`,
   'cc-addon-credentials.field.auth-token': `Authentication token`,
