@@ -10,9 +10,16 @@ import { i18n } from '../lib/i18n.js';
 import { skeletonStyles } from '../styles/skeleton.js';
 import { ccLink, linkStyles } from '../templates/cc-link.js';
 
+/**
+ * @typedef {import('../types').BackupDetails} BackupDetails
+ * @typedef {import('../types').Backup} Backup
+ * @typedef {'restore'|'delete'} OverlayType
+ */
+
 const backupSvg = new URL('../assets/backup.svg', import.meta.url).href;
 const closeSvg = new URL('../assets/close.svg', import.meta.url).href;
 
+/** @type {BackupDetails} */
 const SKELETON_BACKUPS = {
   providerId: '',
   passwordForCommand: '',
@@ -26,30 +33,7 @@ const SKELETON_BACKUPS = {
  *
  * * When `backups` is nullish, a skeleton screen UI pattern is displayed (loading hint).
  *
- * ## Type definitions
- *
- * ```js
- * interface BackupDetails {
- *   providerId: string,
- *   passwordForCommand: string,
- *   list: Backup[],
- * }
- * ```
- *
- * ```js
- * interface Backup {
- *   createdAt: Date,
- *   expiresAt: Date
- *   url: string,
- *   restoreCommand: string,
- *   deleteCommand: string,
- * }
- * ```
- *
  * @cssdisplay grid
- *
- * @prop {BackupDetails} backups - Sets the different details about an add-on and its backup.
- * @prop {Boolean} error - Displays an error message.
  */
 export class CcAddonBackups extends LitElement {
 
@@ -65,8 +49,20 @@ export class CcAddonBackups extends LitElement {
 
   constructor () {
     super();
+
+    /** @type {BackupDetails} Sets the different details about an add-on and its backup. */
+    this.backups = null;
+
+    /** @type {Boolean} Displays an error message. */
     this.error = false;
+
+    /** @type {OverlayType} */
     this._overlay = null;
+
+    /** @type {EventTarget} */
+    this._overlayTarget = null;
+
+    /** @type {Backup} TODO */
     this._selectedBackup = null;
   }
 
@@ -169,6 +165,11 @@ export class CcAddonBackups extends LitElement {
   // Because we focus in both ways (open & close), part of the modal is visible
   // This could be solved with some offsetTop and positionning magic but it's not easy to do it properly and it's not a very common case.
   // For now, we help the focus with some scroll into view.
+
+  /**
+   * @param {OverlayType} type
+   * @param {Backup} backup
+   */
   _onOpenOverlay (e, type, backup) {
     this._overlay = type;
     this._selectedBackup = backup;
@@ -193,7 +194,8 @@ export class CcAddonBackups extends LitElement {
   render () {
 
     const skeleton = (this.backups == null);
-    const { providerId, list: backups, passwordForCommand } = skeleton ? SKELETON_BACKUPS : this.backups;
+    const backupDetails = skeleton ? SKELETON_BACKUPS : this.backups;
+    const { providerId, passwordForCommand } = backupDetails;
     const hasData = (!this.error && (backups.length > 0));
     const emptyData = (!this.error && (backups.length === 0));
 
@@ -201,12 +203,12 @@ export class CcAddonBackups extends LitElement {
 
       <cc-block>
         <div slot="title">${i18n('cc-addon-backups.title')}</div>
-        
+
         ${hasData ? html`
           <div><span class=${classMap({ skeleton })}>${this._getDescription(providerId)}</span></div>
-          
+
           <div class="backup-list">
-            ${backups.map((backup) => html`
+            ${backupDetails.list.map((backup) => html`
               <div class="backup">
                 <span class="backup-icon"><img src=${backupSvg} alt=""></span>
                 <span class="backup-text">
@@ -220,15 +222,15 @@ export class CcAddonBackups extends LitElement {
             `)}
           </div>
         ` : ''}
-        
+
         ${emptyData ? html`
           <div class="cc-block_empty-msg">${i18n('cc-addon-backups.empty')}</div>
         ` : ''}
-        
+
         ${this.error ? html`
           <cc-error>${i18n('cc-addon-backups.loading-error')}</cc-error>
         ` : ''}
-        
+
         <!-- The restore and delete overlays are quite similar but's it's easier to read with a big if and some copy/paste than 8 ifs -->
         ${this._overlay === 'restore' ? html`
           <div slot="overlay">
@@ -239,15 +241,16 @@ export class CcAddonBackups extends LitElement {
                 image=${closeSvg}
                 hide-text
                 @cc-button:click=${this._onCloseOverlay}
-              >${i18n('cc-addon-backups.close-btn')}</cc-button>
-              
+              >${i18n('cc-addon-backups.close-btn')}
+              </cc-button>
+
               ${this._displaySectionWithService(providerId) ? html`
                 <cc-block-section>
                   <div slot="title">${this._getRestoreWithServiceTitle(providerId)}</div>
                   <div>${this._getRestoreWithServiceDescription(providerId, this._selectedBackup.url)}</div>
                 </cc-block-section>
               ` : ''}
-              
+
               <cc-block-section>
                 <div slot="title">${i18n('cc-addon-backups.restore.manual.title')}</div>
                 <div>${this._getManualRestoreDescription(providerId)}</div>
@@ -258,7 +261,7 @@ export class CcAddonBackups extends LitElement {
             </cc-block>
           </div>
         ` : ''}
-        
+
         ${this._overlay === 'delete' ? html`
           <div slot="overlay">
             <cc-block class="overlay">
@@ -268,15 +271,16 @@ export class CcAddonBackups extends LitElement {
                 image=${closeSvg}
                 hide-text
                 @cc-button:click=${this._onCloseOverlay}
-              >${i18n('cc-addon-backups.close-btn')}</cc-button>
-              
+              >${i18n('cc-addon-backups.close-btn')}
+              </cc-button>
+
               ${this._displaySectionWithService(providerId) ? html`
                 <cc-block-section>
                   <div slot="title">${this._getDeleteWithServiceTitle(providerId)}</div>
                   <div>${this._getDeleteWithServiceDescription(providerId, this._selectedBackup.url)}</div>
                 </cc-block-section>
               ` : ''}
-            
+
               <cc-block-section>
                 <div slot="title">${i18n('cc-addon-backups.delete.manual.title')}</div>
                 <div>${this._getManualDeleteDescription(providerId)}</div>

@@ -8,10 +8,15 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { i18n } from '../lib/i18n.js';
 import { skeletonStyles } from '../styles/skeleton.js';
 
+/**
+ * @typedef {import('../types').Addon} Addon
+ */
+
+/** @type {Addon} */
 const SKELETON_ADDON = {
   name: '??????????????????????????',
   provider: {},
-  plan: {
+  plannn: {
     name: '?????????',
   },
   creationDate: 0,
@@ -26,38 +31,8 @@ const SKELETON_VERSION = '????????';
  *
  * * When `addon` or `version` are null, a skeleton screen UI pattern is displayed (loading hint) on the corresponding zone.
  *
- * ## Type definitions
- *
- * ```js
- * interface Provider {
- *   name: string,
- *   logoUrl: string,
- * }
- * ```
- *
- * ```js
- * interface Plan {
- *   name: string,
- * }
- * ```
- *
- * ```js
- * interface Addon {
- *   id: string,
- *   name: string,
- *   provider: Provider,
- *   plan: Plan,
- *   creationDate: Date|number|string,
- * }
- * ```
- *
  * @cssdisplay block
- *
- * @prop {Addon} addon - Sets add-on details and config.
- * @prop {Boolean} error - Displays an error message.
- * @prop {String} version - Sets version of add-on.
  */
-
 export class CcHeaderAddon extends LitElement {
 
   static get properties () {
@@ -70,7 +45,15 @@ export class CcHeaderAddon extends LitElement {
 
   constructor () {
     super();
+
+    /** @type {Addon} Sets add-on details and config. */
+    this.addon = null;
+
+    /** @type {boolean} Displays an error message. */
     this.error = false;
+
+    /** @type {string} Sets version of add-on. */
+    this.version = null;
   }
 
   render () {
@@ -89,7 +72,7 @@ export class CcHeaderAddon extends LitElement {
         <cc-flex-gap class="main">
         
           <cc-img class="logo" src="${ifDefined(addon.provider.logoUrl)}"
-            ?skeleton=${skeleton} text="${addon.provider.name}" title="${ifDefined(addon.provider.name)}"></cc-img>
+            ?skeleton=${skeleton} text="${addon.provider.name}" title="${ifDefined(addon)}"></cc-img>
         
           <div class="details">
             <div class="name"><span class="${classMap({ skeleton })}">${addon.name}</span></div>
