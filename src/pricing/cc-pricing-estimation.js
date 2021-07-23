@@ -51,14 +51,14 @@ const SIGN_UP_URL = 'https://api.clever-cloud.com/v2/sessions/signup';
  *   code: string,
  *   value: string|number|boolean,
  * }
- * ``
+ * ```
  *
  * ```js
  * interface Currency {
  *   code: string,
  *   changeRate: string,
  * }
- * ``
+ * ```
  *
  * @cssdisplay block
  *
@@ -76,8 +76,8 @@ export class CcPricingEstimation extends withResizeObserver(LitElement) {
   static get properties () {
     return {
       currency: { type: Object },
-      selectedProducts: { type: Array },
-      totalPrice: { type: Number },
+      selectedProducts: { type: Array, attribute: 'selected-products' },
+      totalPrice: { type: Number, attribute: 'total-price' },
       _selectedProducts: { type: Array },
       _size: { type: String },
     };
@@ -162,10 +162,10 @@ export class CcPricingEstimation extends withResizeObserver(LitElement) {
           ${this._selectedProducts.length > 0
             ? this._renderBigSelProducts()
             : ''}
-          ${this.selectedProducts.length === 0 ? html`
+          ${this._selectedProducts.length === 0 ? html`
             <tr>
               <td colspan="6" class="error-text">
-                ${i18n('cc-pricing-estimation.empty-basket')}
+                ${i18n('cc-pricing-estimation.empty-list')}
               </td>
             </tr>
           ` : ''}
@@ -237,7 +237,7 @@ export class CcPricingEstimation extends withResizeObserver(LitElement) {
     if (this._selectedProducts.length === 0) {
       return html`
         <div class="error-text">
-          ${i18n('cc-pricing-estimation.empty-basket')}
+          ${i18n('cc-pricing-estimation.empty-list')}
         </div>
       `;
     }
@@ -270,8 +270,9 @@ export class CcPricingEstimation extends withResizeObserver(LitElement) {
               class="input-number"
               min="0"
               value=${product.quantity}
+              controls
               @cc-input-number:input=${(e) => this._onChangeQuantity(product, e)}
-              controls>
+              >
             </cc-input-number>
           </div>
 
@@ -435,10 +436,14 @@ export class CcPricingEstimation extends withResizeObserver(LitElement) {
 
           .container {
               border-radius: 0.25em;
-              box-shadow: var(--shadow);
           }
 
           /* Global properties */
+
+          .estimation-table,
+          .container {
+              box-shadow: var(--cc-shadow);
+          }
 
           .number-align {
               text-align: right;

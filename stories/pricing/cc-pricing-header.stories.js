@@ -81,7 +81,6 @@ export const dataLoadedWithDollars = makeStory(conf, {
 });
 
 // Right now, because of how we're using this component, we don't need:
-// * skeleton/waiting state
 // * empty state
 // * error state
 

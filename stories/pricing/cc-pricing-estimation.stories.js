@@ -66,8 +66,9 @@ export const dataLoadedWithCustomStyles = makeStory(conf, {
   css: `
     cc-pricing-estimation {
       border-radius: 5px;
-      --shadow: 0 0 5px #aaa;
+      --cc-shadow:  0 0 5px #aaa;
       margin: 1rem;
+      padding: 1rem;
       overflow: hidden;
     }
   `,
@@ -113,7 +114,6 @@ export const empty = makeStory(conf, {
 });
 
 // Right now, because of how we're using this component, we don't need:
-// * skeleton/waiting state
 // * error state
 
 enhanceStoriesNames({

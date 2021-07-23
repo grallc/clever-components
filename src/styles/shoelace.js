@@ -1,4 +1,4 @@
-import {css} from 'lit-element';
+import { css } from 'lit-element';
 
 export const shoelaceStyles = css`
   :host {

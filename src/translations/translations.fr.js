@@ -357,7 +357,7 @@ export const translations = {
   //#endregion
   //#region cc-pricing-estimation
   'cc-pricing-estimation.delete': `Supprimer le produit`,
-  'cc-pricing-estimation.empty-basket': `Votre panier est vide.`,
+  'cc-pricing-estimation.empty-list': `Ajoutez des produits et services pour modéliser une estimation.`,
   'cc-pricing-estimation.monthly-est': `Total Estimé (30 jours)`,
   'cc-pricing-estimation.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
   'cc-pricing-estimation.price-name-daily': `Prix (jour)`,
@@ -369,8 +369,8 @@ export const translations = {
   'cc-pricing-estimation.size': `Taille`,
   //#endregion
   //#region cc-pricing-header
-  'cc-pricing-header.currency-text': `Monnaie:`,
-  'cc-pricing-header.est-cost': `Total Estimé:`,
+  'cc-pricing-header.currency-text': `Monnaie : `,
+  'cc-pricing-header.est-cost': `Total Estimé : `,
   'cc-pricing-header.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
   'cc-pricing-header.selected-zone': `Zone : `,
   //#endregion

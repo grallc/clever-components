@@ -4,15 +4,20 @@ import { i18n } from '../lib/i18n.js';
 import '@shoelace-style/shoelace';
 import { withResizeObserver } from '../mixins/with-resize-observer.js';
 import { shoelaceStyles } from '../styles/shoelace.js';
-import { CcZone } from '../zones/cc-zone.js';
 import { skeletonStyles } from '../styles/skeleton.js';
-
-const CURRENCY_EUR = { code: 'EUR', changeRate: 1 };
+import { CcZone } from '../zones/cc-zone.js';
 
 /**
- * A component doing X and Y (one liner description of your component).
+ * A component that displays a total price and allows the selection of a currency and a zone..
  *
  * ## Type definitions
+ *
+ * ```js
+ * interface Currency {
+ *   name: string,
+ *   code: string,
+ *   displayValue: string,
+ * }
  *
  * ```js
  * interface Zone {
@@ -29,13 +34,14 @@ const CURRENCY_EUR = { code: 'EUR', changeRate: 1 };
  *
  *  @cssdisplay block
  *
- * @prop {Zone} selectedZone - the hosting zone selected for the items
- * @prop {Array<Zone>} zones - Sets  all the zone for the select
+ * @prop {Currency} currencies - The currencies needed for the select.
  * @prop {Array<Item>} items  - Sets all the products selected to calculate the price
  * @prop {String} pricingCurrency - Sets the current pricing currency
+ * @prop {Zone} selectedZone - The hosting zone selected for the items
+ * @prop {Array<Zone>} zones - Sets  all the zone for the select
  *
- * @event {CustomEvent<ExampleInterface>} cc-pricing-header:change-currency - Fires XXX whenever YYY.
- * @event {CustomEvent<ExampleInterface>} cc-pricing-header:change-zone - Fires XXX whenever YYY.
+ * @event {CustomEvent<Currency>} cc-pricing-header:change-currency - Fires XXX whenever YYY.
+ * @event {CustomEvent<Zone>} cc-pricing-header:change-zone - Fires XXX whenever YYY.
  *
  *
  */
@@ -102,7 +108,7 @@ export class CcPricingHeader extends withResizeObserver(LitElement) {
           ${i18n('cc-pricing-header.currency-text')}
         </div>
         <div class="currency-select">
-          <sl-select @sl-change=${this._onCurrencyChange} value=${this.currency.code} class="select">
+          <sl-select value=${this.currency.code} class="select" @sl-change=${this._onCurrencyChange}>
             ${this.currencies.length === 0 ? html`
               <sl-menu-item class="skeleton">
                 <div slot="prefix" class="skeleton-item">€ EUR</div>
@@ -111,17 +117,16 @@ export class CcPricingHeader extends withResizeObserver(LitElement) {
             ${this.currencies.length > 0
               ? this._getformattedCurrencies(this.currencies).map((c) => html`
                 <sl-menu-item value=${c.code}>
-                    ${c.displayValue}
+                  ${c.displayValue}
                 </sl-menu-item>
-              `)
-              : ''}
+              `) : ''}
           </sl-select>
         </div>
         <div class="zone-text">
           ${i18n('cc-pricing-header.selected-zone')}
         </div>
         <div class="zones">
-          <sl-select @sl-change=${this._onZoneInput} value=${this.zoneId} class="select">
+          <sl-select value=${this.zoneId} class="select" @sl-change=${this._onZoneInput}>
             ${this.zones.length === 0 ? html`
               <sl-menu-item>
                 <cc-zone slot="prefix" mode="medium"></cc-zone>
@@ -134,7 +139,7 @@ export class CcPricingHeader extends withResizeObserver(LitElement) {
               </sl-menu-item>
             ` : ''}
             ${this.zones.length > 0 ? this.zones.map((zone) => html`
-                <sl-menu-item  class="zone-item" value=${zone.name}>
+                <sl-menu-item class="zone-item" value=${zone.name}>
                   ${CcZone.getText(zone)}
                   <cc-zone
                     slot="prefix"
@@ -185,7 +190,7 @@ export class CcPricingHeader extends withResizeObserver(LitElement) {
           .skeleton-item {
               visibility: hidden;
           }
-          
+
           .select-currency {
               align-items: center;
               display: flex;
@@ -245,7 +250,7 @@ export class CcPricingHeader extends withResizeObserver(LitElement) {
               display: none;
           }
 
-          sl-menu-item.zone-itemw::part(prefix) {
+          sl-menu-item.zone-item::part(prefix) {
               display: block;
               flex: 1 1 0;
           }

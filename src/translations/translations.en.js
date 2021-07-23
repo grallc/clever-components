@@ -344,7 +344,7 @@ export const translations = {
   //#endregion
   //#region cc-pricing-estimation
   'cc-pricing-estimation.delete': `Delete product`,
-  'cc-pricing-estimation.empty-basket': `Your basket is empty.`,
+  'cc-pricing-estimation.empty-list': `Add some items to create your pricing estimation.`,
   'cc-pricing-estimation.monthly-est': `Estimated Cost (30 days)`,
   'cc-pricing-estimation.price': ({ price, code }) => `${formatCurrency(lang, price, { currency: code })}`,
   'cc-pricing-estimation.price-name-daily': `Price (day)`,

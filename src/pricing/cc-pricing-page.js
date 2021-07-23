@@ -7,11 +7,8 @@ import { dispatchCustomEvent } from '../lib/events.js';
 const CURRENCY_EUR = { code: 'EUR', changeRate: '1' };
 
 /**
- * A component doing X and Y (one liner description of your component).
- *
- * * 🎨 default CSS display: `block`
- * <br>
- * 🧐 [component's source code on GitHub](https://github.com/CleverCloud/clever-components/blob/master/src/pricing/cc-pricing-page.js)
+ * A component that acts as a pricing simulator which takes a list of `cc-pricing-product`
+ * in the default slot and manage everything to do a simulation.
  *
  * ## Type definitions
  *
@@ -25,33 +22,36 @@ const CURRENCY_EUR = { code: 'EUR', changeRate: '1' };
  * }
  * ```
  *
- * @prop {Array<Product>} products - List of the products available
- * @prop {Array<PricingList>} pricingLists - List of the pricing for each zone
+ * @cssdisplay block
+ *
+ * @prop {Array<Currencies>} - List of the currencies available.
+ * @prop {Currency} currency - Current/Default currency selected.
+ * @prop {Array<Product>} products - List of the products available.
+ * @prop {String} zoneId - Current/Default zoneId.
+ * @prop {Array<Zone>} zones - List of the zones available.
+ *
  *
  */
 export class CcPricingPage extends LitElement {
 
   static get properties () {
     return {
-      products: { type: Array },
-      // pricingList: { type: Array },
       currencies: { type: Array },
+      currency: { type: Object },
+      products: { type: String },
+      zoneId: { type: Object },
       zones: { type: Array },
-      _selectedProducts: { type: Object },
-      currency: { type: String },
-      zoneId: { type: String },
-      _totalPrice: { type: Number },
+      _selectedProducts: { type: String },
+      _totalPrice: { type: Array },
     };
   }
-
-  // DOCS: 2. Constructor
 
   constructor () {
     super();
     this._selectedProducts = {};
     this.currencies = [];
     // Use Paris as default (might need to change later on)
-    this.zoneId = 'PAR';
+    this.zoneId = 'par';
     this.currency = CURRENCY_EUR;
     this.zones = [];
     this._totalPrice = 0;
@@ -59,7 +59,6 @@ export class CcPricingPage extends LitElement {
 
   _getTotalPrice () {
     let totalPrice = 0;
-    console.log('from header', this._selectedProducts);
     for (const p of Object.values(this._selectedProducts)) {
       if (p != null) {
         totalPrice += p.item.price * 30 * 24 * p.quantity;
@@ -68,15 +67,6 @@ export class CcPricingPage extends LitElement {
     return totalPrice;
   }
 
-  /**
-   *
-   * @param product
-   * @private
-   * If we receive a product add event. We will get the product added as a param. Then we'll check if
-   * it is already on the selected products list. If not we initiate it with it's qt at 1.
-   * If it is already present it means it has been added from the product page and not from the recap so
-   * we just add one more to the list
-   */
   _onAddProduct ({ detail: product }) {
     // TODO: Have a dedicated product.item.id
     const id = (product.item.id != null)
@@ -93,14 +83,6 @@ export class CcPricingPage extends LitElement {
     this._totalPrice = this._getTotalPrice();
   }
 
-  /**
-   *
-   * @param product
-   * @private
-   * When someone add or remove a product from the recap that the user has selected before we check if
-   * we update the quantity it is at a quantity of zero then we remove it. Otherwise we just update it's quantity
-   * whether it has been an addition or subtraction of the quantity.
-   */
   _onQuantityChanged ({ detail: product }) {
     // TODO: Have a dedicated product.item.id
     const id = (product.item.id !== undefined)
@@ -137,11 +119,11 @@ export class CcPricingPage extends LitElement {
     return html`
       <div class="header">
         <cc-pricing-header
+          part="header"
+          .currency=${this.currency}
+          .currencies=${this.currencies}
           .totalPrice=${this._totalPrice}
           .zoneId=${this.zoneId}
-          .currency=${this.currency}
-          .selectedProducts=${this._selectedProducts}
-          .currencies=${this.currencies}
           .zones=${this.zones}
           @cc-pricing-header:change-currency=${this._onCurrencyChanged}
           @cc-pricing-header:change-zone=${this._onZoneChanged}
@@ -151,10 +133,11 @@ export class CcPricingPage extends LitElement {
       <slot name="resources"></slot>
       <slot @cc-pricing-product:add-product=${this._onAddProduct}></slot>
       <div class="estimation">
-        <div class="title">Cost Estimation</div>
+        <slot name="estimation-header"></slot>
         <cc-pricing-estimation
-          .selectedProducts=${this._selectedProducts}
+          part="estimation"
           .currency=${this.currency}
+          .selectedProducts=${this._selectedProducts}
           .totalPrice=${this._totalPrice}
           @cc-pricing-estimation:change-quantity=${this._onQuantityChanged}
           @cc-pricing-estimation:delete-quantity=${this._onDeleteQuantity}
@@ -170,21 +153,6 @@ export class CcPricingPage extends LitElement {
       css`
           :host {
               display: block;
-          }
-
-          .addons div {
-              margin-bottom: 1.5rem;
-          }
-
-          .runtimes div {
-              margin-bottom: 1.5rem;
-          }
-
-          .title {
-              font-size: 1.5rem;
-              font-weight: bold;
-              margin-bottom: 1rem;
-              margin-top: 0.5rem;
           }
       `,
     ];

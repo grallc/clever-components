@@ -1,9 +1,11 @@
 import '../../src/pricing/cc-pricing-page.js';
 import '../../src/pricing/cc-pricing-product.js';
+// Load smart definition so we can use it in the Markdown docs
+import '../../src/pricing/cc-pricing-page.smart.js';
 import { getFullProductAddon } from '../assets/addon-plans.js';
+import { getFullProductRuntime } from '../assets/runtime-plans.js';
 import { makeStory } from '../lib/make-story.js';
 import { enhanceStoriesNames } from '../lib/story-names.js';
-import { getFullProductRuntime } from '../assets/runtime-plans.js';
 
 export default {
   title: '🛠 pricing/<cc-pricing-page>',
@@ -17,8 +19,6 @@ const conf = {
       margin-bottom: 1rem;
   }`,
 };
-
-const SHORT_DESC = `Hey i'm a description of the addon`;
 
 const RUBY_RUNTIME = getFullProductRuntime('ruby');
 const NODE_RUNTIME = getFullProductRuntime('node');
@@ -62,7 +62,7 @@ const CELLAR_INFOS = {
 };
 const ZONES = [
   {
-    name: 'PAR',
+    name: 'par',
     country: 'France',
     countryCode: 'FR',
     city: 'Paris',
@@ -71,7 +71,7 @@ const ZONES = [
     tags: ['infra:clever-cloud', 'region:eu'],
   },
   {
-    name: 'RBX',
+    name: 'rbx',
     country: 'France',
     countryCode: 'FR',
     city: 'Roubaix',
@@ -80,7 +80,7 @@ const ZONES = [
     tags: ['region:eu', 'infra:ovh'],
   },
   {
-    name: 'WAR',
+    name: 'war',
     country: 'Poland',
     countryCode: 'PL',
     city: 'Warsaw',
@@ -137,12 +137,112 @@ export const defaultStory = makeStory(conf, {
         currency='${JSON.stringify(MONGO_ADDON.currency)}'
     >
     </cc-pricing-product>
-    <br> <br>
+    <h1>Object Storage</h1>
     <cc-pricing-product-cellar
       intervals=${JSON.stringify(CELLAR_INFOS)}
     >
     </cc-pricing-product-cellar>
     <br>
+`,
+  }],
+});
+
+export const dataLoadedWithCustomStyles = makeStory(conf, {
+  css: `  
+        cc-pricing-page::part(header) {
+            border-radius: 5px;
+            box-shadow: 0 0 0.5rem #aaa;
+            margin: 1rem;
+        }
+
+        cc-pricing-page::part(estimation) {
+            border-radius: 5px;
+            --cc-shadow:  0 0 5px #aaa;
+            margin: 1rem;
+            overflow: hidden;
+        }
+
+        cc-pricing-product, 
+        cc-pricing-product-cellar {
+            border-radius: 5px;
+            box-shadow:  0 0 5px #aaa;
+            margin: 1rem;
+            overflow: hidden;
+        }
+        
+        cc-pricing-product-cellar {
+          padding: 1rem;
+          overflow: hidden;        
+        }
+        
+        .title {
+          font-size: 1.5rem;
+          font-weight: bold;
+          padding: 1rem;
+        }
+        
+        .description {
+          padding: 1rem;
+        }
+  `,
+  items: [{
+    currencies: [
+      { code: 'EUR', displayValue: '€ EUR', changeRate: 1 },
+      { code: 'GBP', displayValue: '£ GBP', changeRate: 0.88603 },
+      { code: 'USD', displayValue: '$ USD', changeRate: 1.2091 },
+    ],
+    zones: ZONES,
+    innerHTML: `
+    <div class="title">Runtimes</div>
+    <cc-pricing-product 
+        name='${RUBY_RUNTIME.name}'
+        icon='${RUBY_RUNTIME.icon}'
+        description='${RUBY_RUNTIME.description}'
+        features='${JSON.stringify(RUBY_RUNTIME.features)}'
+        items='${JSON.stringify(RUBY_RUNTIME.items)}'
+        currency='${JSON.stringify(RUBY_RUNTIME.currency)}'
+    >
+    </cc-pricing-product>   
+    <cc-pricing-product
+        name='${NODE_RUNTIME.name}'
+        icon='${NODE_RUNTIME.icon}'
+        description='${NODE_RUNTIME.description}'
+        features='${JSON.stringify(NODE_RUNTIME.features)}'
+        items='${JSON.stringify(NODE_RUNTIME.items)}'
+        currency='${JSON.stringify(NODE_RUNTIME.currency)}'
+    >
+    </cc-pricing-product>
+    <div class="title">Addons</div>
+    <cc-pricing-product 
+        name='${PSQL_ADDON.name}'
+        icon='${PSQL_ADDON.icon}'
+        description='${PSQL_ADDON.description}'
+        features='${JSON.stringify(PSQL_ADDON.features)}'
+        items='${JSON.stringify(PSQL_ADDON.items)}'
+        currency='${JSON.stringify(PSQL_ADDON.currency)}'
+    >
+    </cc-pricing-product>   
+    <cc-pricing-product
+        name='${MONGO_ADDON.name}'
+        icon='${MONGO_ADDON.icon}'
+        description='${MONGO_ADDON.description}'
+        features='${JSON.stringify(MONGO_ADDON.features)}'
+        items='${JSON.stringify(MONGO_ADDON.items)}'
+        currency='${JSON.stringify(MONGO_ADDON.currency)}'
+    >
+    </cc-pricing-product>
+    <div class="title">Object Storage</div>
+    <cc-pricing-product-cellar
+      intervals=${JSON.stringify(CELLAR_INFOS)}
+    >
+    </cc-pricing-product-cellar>
+    <br>
+    <div slot="estimation-header">
+      <div class="title">Cost estimation slot</div>
+      <div class="description">
+      You can simulate the cost of your architecture here.
+      </div>
+    </div>
 `,
   }],
 });
@@ -212,11 +312,12 @@ export const dataLoadedWithAddons = makeStory(conf, {
 
 // Right now, because of how we're using this component, we don't need:
 // * skeleton/waiting state
-// * emtpy state
+// * empty state
 // * error state
 
 enhanceStoriesNames({
   defaultStory,
+  dataLoadedWithCustomStyles,
   dataLoadedWithAddons,
   dataLoadedWithRuntimes,
 });
